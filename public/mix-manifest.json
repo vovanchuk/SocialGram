@@ -1,0 +1,14 @@
+{
+    "/js/app.js": "/js/app.js",
+    "/css/app.css": "/css/app.css",
+    "/layout-components-FollowersModal-vue.js": "/layout-components-FollowersModal-vue.js",
+    "/layout-components-StoriesModal-vue.js": "/layout-components-StoriesModal-vue.js",
+    "/layout-layouts-Components-AppBar-vue.js": "/layout-layouts-Components-AppBar-vue.js",
+    "/layout-layouts-Components-MainNav-vue.js": "/layout-layouts-Components-MainNav-vue.js",
+    "/layout-layouts-Components-MainSideBar-vue.js": "/layout-layouts-Components-MainSideBar-vue.js",
+    "/layout-layouts-Components-RightBar-vue.js": "/layout-layouts-Components-RightBar-vue.js",
+    "/layout-layouts-Components-UserHeader-vue.js": "/layout-layouts-Components-UserHeader-vue.js",
+    "/layout-layouts-default-vue.js": "/layout-layouts-default-vue.js",
+    "/layout-layouts-empty-vue.js": "/layout-layouts-empty-vue.js",
+    "/layout-layouts-profile-vue.js": "/layout-layouts-profile-vue.js"
+}
