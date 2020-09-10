@@ -5,66 +5,88 @@
                 <div class="title">Featured Stories</div>
             </v-col>
             <v-col class="d-flex justify-end py-0 pr-10">
-                <v-btn depressed class="text-none" color="grey lighten-4" @click="$refs.storyUpload.click()">
-                    <v-icon style="color: #9E9E9E;">mdi-plus-circle-outline</v-icon>
-                    <span class="grey--text ml-2">Upload Story</span>
+                <v-btn outlined class="text-none" color="#ff4e6a" @click="$refs.storyUpload.click()">
+                    <v-icon>mdi-plus-circle-outline</v-icon>
+                    <span class="ml-2">Upload Story</span>
                     <input
                         type="file"
                         ref="storyUpload"
                         v-show="false"
                         @change="onStoryChange"
-                        >
+                    >
                 </v-btn>
             </v-col>
         </v-row>
         <v-row justify-start class="mt-7">
-            <v-card elevation="12" height="230" width="170" color="blue" class="mr-4">
-                <v-img
-                        height="230"
-                        src="https://images.unsplash.com/photo-1525138079-9424be9df411?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=675&q=80"
-                ></v-img>
-            </v-card>
-            <v-card elevation="12" height="230" width="170" color="blue" class="mr-4">
-                <v-img
-                        height="230"
-                        src="https://images.unsplash.com/photo-1523224949444-170258978eef?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=564&q=80"
-                ></v-img>
-            </v-card>
-            <v-card elevation="12" height="230" width="170" color="blue" class="mr-4">
-                <v-img
-                        height="230"
-                        src="https://images.unsplash.com/photo-1551818633-579bccc6210c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1267&q=80"
-                ></v-img>
-            </v-card>
-            <v-card elevation="12" height="230" width="170" color="blue" class="mr-4">
-                <v-img
-                        height="230"
-                        src="https://images.unsplash.com/photo-1478296046035-d4fc77bec472?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80"
-                ></v-img>
-            </v-card>
+            <v-slide-group
+                class="pa-4"
+                show-arrows
+            >
+                <v-slide-item
+                    v-for="(story, index) in storyFeed" :key="story.id"
+                >
+                    <v-card elevation="12" height="230" width="170" color="blue" class="mr-4 story-viewed" @click="toggleStoriesModal(story)">
+                        <v-img
+                            height="230"
+                            :src="story.type === 'video' ? story.preview_url : story.url"
+                            :gradient="story.isViewed ? 'to top right, rgba(51, 54, 71, 0.65), rgba(25,32,72,.7)' : ''"
+                        ></v-img>
+                    </v-card>
+                </v-slide-item>
+            </v-slide-group>
         </v-row>
+        <StoriesModal :profile="profileInfo" :slides="storiesSlides" :showModal="showModal" @closeModal="showModal = false"/>
     </div>
 </template>
 
 <script>
+    import {mapGetters} from "vuex";
+    import StoriesModal from "./StoriesModal";
+
     export default {
+        data:() => ({
+            clickedStory: {},
+            showModal: false,
+        }),
+        components: {StoriesModal},
+        computed: {
+            ...mapGetters("profile", ["storyFeed", "activeViewed", "activeUnviewed", "profileInfo"]),
+            storiesSlides(){
+                let stories = [];
+                stories = this.clickedStory.isViewed ? [...this.activeViewed] : [...this.activeUnviewed];
+                let currentIndex = stories.findIndex(story => story.id === this.clickedStory.id);
+                if (currentIndex === -1) return [];
+                this.$swap(stories, 0, currentIndex);
+                return stories;
+                // if(this.clickedStory.isViewed) {
+                //     let viewed = [...this.activeViewed];
+                //     let currentIndex = viewed.findIndex(story => story.id === this.clickedStory.id);
+                //     if (currentIndex === -1) return;
+                //     this.swap(viewed, 0, currentIndex);
+                //     return viewed;
+                // } else {
+                //     let unviewed = [...this.activeUnviewed];
+                //     let currentIndex = unviewed.findIndex(story => story.id === this.clickedStory.id);
+                //     if (currentIndex === -1) return;
+                //     this.swap(unviewed, 0, currentIndex);
+                //     return unviewed;
+                // }
+            }
+        },
         methods: {
             onStoryChange(e) {
-                if (e.target.files[0] === undefined) {
-                    return;
-                }
-
+                if (e.target.files[0] === undefined) return;
                 let formData = new FormData();
                 formData.append("file", e.target.files[0]);
-
-                this.axios.post('/stories', formData).then((res) => {
-                    console.log(res);
-                })
+                this.$store.dispatch("profile/uploadStory", formData);
+            },
+            toggleStoriesModal(story) {
+                this.clickedStory = story;
+                this.showModal = true;
             }
         }
     }
 </script>
 
 <style scoped>
-
 </style>

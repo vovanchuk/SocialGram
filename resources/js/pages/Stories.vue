@@ -14,7 +14,13 @@
         data() {
             return {
                 story: [
-                    'https://picsum.photos/1080/1920', 'https://i.picsum.photos/id/1026/1080/1920.jpg?hmac=XQFfEG-QjNNv3JBpMV7P8B9NV7hhZBcPl_r3wRvSVA4', 'https://picsum.photos/1080/1920'
+                    {
+                        url: 'storage/stories/8VF2PMNwjK7yA7k2TjL3ydFKJjXhUIlJAEfb3TRp.mp4',
+                        type: 'video', duration: 32000
+                    }, {
+                        url: 'https://i.picsum.photos/id/1026/1080/1920.jpg?hmac=XQFfEG-QjNNv3JBpMV7P8B9NV7hhZBcPl_r3wRvSVA4',
+                        type: 'image'
+                    }, {url: 'https://picsum.photos/1080/1920', type: 'image'}
                 ],
                 profile: {
                     "id": 1,

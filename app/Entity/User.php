@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Entity\Post;
 use App\Entity\Story;
+use Carbon\Carbon;
 use DomainException;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -87,7 +88,17 @@ class User extends Authenticatable implements JWTSubject
 
     public function stories()
     {
-        return $this->hasMany(Story::class);
+        return $this->hasMany(Story::class)->orderBy('created_at', 'desc');
+    }
+
+    public function activeStories()
+    {
+        return $this->hasMany(Story::class)->where('created_at', '>', Carbon::now()->subHours(24)->toDateTimeString())->orderBy('created_at', 'desc');
+    }
+
+    public function favoritedStories()
+    {
+        return $this->hasMany(Story::class)->where('favorited', '=', 1)->orderBy('created_at', 'desc');
     }
 
     public function posts()

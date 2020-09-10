@@ -1,10 +1,13 @@
 <template>
-    <v-card height="100%"
+    <v-card height="98%"
             width="56vh"
             style="border: 1px solid black;"
             class="mx-auto story"
-            :img="currentSlide"
+            :img="currentSlide.type === 'image' ? currentSlide.url : ''"
     >
+        <video ref="videoStory" v-if="currentSlide.type === 'video'" :src="currentSlide.url" autoplay playsinline muted @click="slideClicked"
+               @mousedown="mouseDown"></video>
+<!--                <v-img v-if="currentSlide.type === 'image'" :src="currentSlide.url" @click="slideClicked" @mousedown="mouseDown" class="story-image"></v-img>-->
         <div class="timeline">
             <div class="slice" v-for="(slide, i) in slides" :key="i">
                 <div class="progress">&nbsp;</div>
@@ -21,14 +24,15 @@
         <div class="slide" @click="slideClicked" @mousedown="mouseDown">
 
         </div>
+        <v-btn x-large icon v-if="currentSlide.type === 'video'" class="text-none" @click="$refs.videoStory.muted = !$refs.videoStory.muted">
+            <v-icon>mdi-volume-high</v-icon>
+        </v-btn>
     </v-card>
 </template>
 
 <script>
     import anime from "animejs";
-
-    const SLIDE_DURATION = 2000;
-
+    const IMAGE_DURATION = 3000;
     export default {
         props: {
             slides: Array,
@@ -47,16 +51,13 @@
             let $timeline = this.$el.getElementsByClassName('timeline')[0];
 
             // Add progress bars to the timeline animation group
-            this.slides.forEach((color, index) => {
+            this.slides.forEach((slide, index) => {
                 this.timeline.add({
                     targets: $timeline.getElementsByClassName('slice')[index].getElementsByClassName('progress'),
                     width: '100%',
-                    duration: SLIDE_DURATION,
+                    duration: slide.type === 'video' ? slide.duration : IMAGE_DURATION,
                     changeBegin: () => {
-                        // console.log('before: ' + this.currentSlideIndex);
                         this.currentSlideIndex = index;
-                        // console.log('index: ' + index)
-                        // console.log('after: ' + this.currentSlideIndex);
                     },
                     complete: () => {
                         if (index === this.slides.length - 1) {
@@ -74,19 +75,19 @@
                     this.pressFunc = setTimeout(() => {
                         this.pressDetect = true;
                         this.timeline.pause();
+                        if(e.target.tagName === 'VIDEO') this.$refs.videoStory.pause();
                     }, 150)
                 }
             },
             preloadNext() {
-                // if (this.currentSlideIndex === this.slides.length - 1) return;
+                if (this.currentSlideIndex === this.slides.length - 1) return;
 
                 let img = new Image();
 
                 img.onload = () => {
                     console.log('img preloaded');
                 }
-
-                img.src = this.slides[this.currentSlideIndex + 1];
+                img.src = this.slides[this.currentSlideIndex + 1].url;
             },
             slideClicked(e) {
                 clearTimeout(this.pressFunc);
@@ -94,6 +95,7 @@
                 if (this.pressDetect) {
                     this.pressDetect = false;
                     this.timeline.play();
+                    if(e.target.tagName === 'VIDEO') this.$refs.videoStory.play();
                     return;
                 }
                 e.offsetX > e.target.clientWidth / 2 ? this.nextSlide() : this.prevSlide();
@@ -101,7 +103,6 @@
             nextSlide: function () {
                 if (this.currentSlideIndex < this.slides.length - 1) {
                     this.currentSlideIndex++;
-                    // console.log('next slide');
                     this.resetSlide();
                 } else {
                     // this.nextStory();
@@ -111,7 +112,6 @@
             prevSlide: function () {
                 if (this.currentSlideIndex > 0) {
                     this.currentSlideIndex = this.currentSlideIndex - 1;
-                    // console.log('prev slide--');
                     this.resetSlide();
                 } else {
                     // this.previousStory();
@@ -120,10 +120,13 @@
             },
             resetSlide: function () { // Jump to beginning of the slide
                 this.timeline.pause();
-                // console.log('seek'+ this.currentSlideIndex )
-                this.timeline.seek(this.currentSlideIndex * SLIDE_DURATION + 1);
+                let seek = 0;
+                for(let i = 0; i < this.currentSlideIndex; i++)
+                    seek += this.timeline.children[i].duration;
+                this.timeline.seek(seek + 1);
                 this.timeline.play();
             },
+
         },
         computed: {
             currentSlide() {
@@ -135,6 +138,21 @@
 </script>
 
 <style scoped>
+
+    video {
+        object-fit: scale-down;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+    }
+
+    .story-image {
+        object-fit: scale-down;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+    }
+
     .story {
         display: flex;
         flex-direction: column;

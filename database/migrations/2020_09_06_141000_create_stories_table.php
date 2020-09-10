@@ -17,6 +17,7 @@ class CreateStoriesTable extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->string('file');
+            $table->boolean('favorited')->default(false);
 
             $table->timestamps();
         });

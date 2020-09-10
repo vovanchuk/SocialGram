@@ -11,7 +11,7 @@ class ProfileController extends Controller
 {
     public function show($username)
     {
-        $user = User::where('username', $username)->firstOrFail();
+        $user = User::where('username', $username)->with('activeStories', 'favoritedStories')->firstOrFail();
 
         return new ProfileResource($user);
     }
