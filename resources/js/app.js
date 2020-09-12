@@ -62,8 +62,9 @@ import VueAuth from '@websanova/vue-auth';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 import auth from './auth';
+import toastification from './plugins/vue-toastification';
 
-Vue.router = router
+Vue.router = router;
 Vue.use(VueAxios, axios);
 axios.defaults.baseURL = 'http://social.test/api';
 

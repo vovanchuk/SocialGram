@@ -31,7 +31,7 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::post('users/{username}', 'UserController@update')->middleware('isAdminOrSelf');
 });
 
-Route::group(['prefix' => 'profiles'], function(){ // api/profiles/test1/follow
+Route::group(['prefix' => 'profiles'], function(){
     Route::post('{profile}/follow', 'ProfileController@follow')->name('follow')->middleware('auth:api');
     Route::delete('{profile}/follow', 'ProfileController@unfollow')->name('unfollow')->middleware('auth:api');;
     Route::get('{username}', 'ProfileController@show');
@@ -42,6 +42,8 @@ Route::group(['prefix' => 'posts'], function(){
 });
 
 Route::group(['prefix' => 'stories'], function(){
-    Route::post('/', 'StoryController@store')->middleware('auth:api');
-    Route::get('/test', 'StoryController@test');
+    Route::group(['middleware' => 'auth:api'], function(){
+        Route::post('/', 'StoryController@store');
+        Route::post('/markViewed', 'StoryController@markViewed');
+    });
 });

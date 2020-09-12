@@ -35,7 +35,7 @@
                 </v-slide-item>
             </v-slide-group>
         </v-row>
-        <StoriesModal :profile="profileInfo" :slides="storiesSlides" :showModal="showModal" @closeModal="showModal = false"/>
+        <StoriesModal v-if="showModal" :profile="profileInfo" :slides="storiesSlides" :showModal="showModal" @closeModal="showModal = false"/>
     </div>
 </template>
 
@@ -50,10 +50,10 @@
         }),
         components: {StoriesModal},
         computed: {
-            ...mapGetters("profile", ["storyFeed", "activeViewed", "activeUnviewed", "profileInfo"]),
+            ...mapGetters("profile", ["storyFeed", "activeViewed", "activeUnviewed", "profileInfo", "storiesFavorited"]),
             storiesSlides(){
                 let stories = [];
-                stories = this.clickedStory.isViewed ? [...this.activeViewed] : [...this.activeUnviewed];
+                stories = this.clickedStory.favorited ? [...this.storiesFavorited] : (this.clickedStory.isViewed ? [...this.activeViewed] : [...this.activeUnviewed]);
                 let currentIndex = stories.findIndex(story => story.id === this.clickedStory.id);
                 if (currentIndex === -1) return [];
                 this.$swap(stories, 0, currentIndex);
@@ -81,6 +81,7 @@
                 this.$store.dispatch("profile/uploadStory", formData);
             },
             toggleStoriesModal(story) {
+                console.log(story)
                 this.clickedStory = story;
                 this.showModal = true;
             }

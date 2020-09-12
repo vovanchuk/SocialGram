@@ -14,9 +14,10 @@ class CreateStoryUserTable extends Migration
     public function up()
     {
         Schema::create('story_user', function (Blueprint $table) {
-            $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('story_id')->constrained('stories')->cascadeOnDelete();
+
+            $table->primary(['user_id', 'story_id']);
         });
     }
 

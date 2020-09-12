@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Entity\Story;
+use Illuminate\Http\Request;
 use App\Http\Requests\Story\StoreRequest;
 use App\Http\Resources\StoryResource;
 use FFMpeg\Coordinate\TimeCode;
@@ -10,6 +12,7 @@ use FFMpeg\Coordinate\Dimension;
 use FFMpeg\Filters\Video\ResizeFilter;
 use FFMpeg\Format\Video\X264;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
@@ -17,6 +20,24 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 class StoryController extends Controller
 {
+
+    public function markViewed(Request $request)
+    {
+        $validated = $request->validate(['ids' => 'array']);
+        $ids = array_unique($validated['ids']);
+        $stories = Story::findMany($ids);
+        $user = Auth::user();
+        $stories->each(function ($story) use ($user) {
+            try{
+                $story->viewers()->attach($user);
+            } catch (\Exception $e) {
+                Log::error($e->getMessage());
+            }
+        });
+
+
+        return response()->json(['status' => 'success'], 200);
+    }
 
     public function store(StoreRequest $request)
     {
@@ -66,7 +87,7 @@ class StoryController extends Controller
     }
 
     // TODO: ВИНЕСТИ НАХУЙ ЗВІДСИ!!
-    public function addBackground($path, $mimetype = null)
+    public function addBackground($path, $mimetype)
     {
         $image = null;
         if(strpos($mimetype, 'image/png') !== false) $image = imagecreatefrompng($path);
@@ -77,10 +98,15 @@ class StoryController extends Controller
         // Detecting 'average' color of image
         $thumb = imagecreatetruecolor(1, 1);
         imagecopyresampled($thumb, $image, 0, 0, 0, 0, 1, 1, imagesx($image), imagesy($image));
-        $mainColor = strtoupper(dechex(imagecolorat($thumb, 0, 0)));
-        $r = round((hexdec(substr($mainColor, 1, 2)) - 119) / 255 * 100);
-        $g = round((hexdec(substr($mainColor, 3, 2)) - 119) / 255 * 100);
-        $b = round((hexdec(substr($mainColor, 5, 2)) - 119) / 255 * 100);
+        $rgb = imagecolorat($thumb, 0, 0);
+        $color = imagecolorsforindex($thumb, $rgb);
+
+        // My own calculations, probably correct
+        $r = round(0.78 * $color['red'] - 100);
+        $g = round(0.78 * $color['green'] - 100);
+        $b = round(0.78 * $color['blue'] - 100);
+
+
         $gradient = Image::make(public_path("/storage/stories/gradient.png"))->colorize($r, $g, $b);
 
         $image = Image::make($path)->widen(1080);

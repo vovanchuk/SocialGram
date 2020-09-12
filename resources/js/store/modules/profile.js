@@ -43,6 +43,9 @@ const getters = {
         activeViewed.forEach(story => story.isViewed = true);
         return activeViewed;
     },
+    storiesFavorited(state) {
+        return state.favoritedStories;
+    },
     storyFeed(state, getters){
         return [].concat(getters.activeUnviewed, state.favoritedStories).concat(getters.activeViewed);
     }
@@ -82,10 +85,20 @@ const actions = {
         })
     },
     uploadStory({commit}, data) {
-        Vue.axios.post(`stories`, data).then((res) => {
+        Vue.axios.post('stories', data).then((res) => {
             commit("ADD_TO_ACTIVE_STORIES", res.data.data);
         }).catch((err) => {
             console.log(err);
+        })
+    },
+    markStoryViewed({commit, getters}, array_ids){
+        if(!Vue.auth.check()) return;
+
+        let unique = [...new Set(array_ids)];
+        Vue.axios.post('stories/markViewed', {ids: unique}).then((res) => {
+            commit("MARK_VIEWED", unique);
+        }).catch((err) => {
+            console.log(err)
         })
     }
 }
@@ -116,11 +129,20 @@ const mutations = {
         state.activeStories = data;
     },
     SET_FAVORITED_STORIES(state, data) {
-        state.favoritedStories = data.filter(story => !_.some(state.activeStories, story)); //remove dublicates in stories array's
-        // state.favoritedStories = data;
+        let filtered = data.filter(story => !_.some(state.activeStories, story)); //remove dublicates in stories array's
+        filtered.forEach((story) => {
+            story.favorited = true;
+        });
+        state.favoritedStories = filtered;
     },
     ADD_TO_ACTIVE_STORIES(state, story) {
         state.activeStories.unshift(story)
+    },
+    MARK_VIEWED(state, ids) {
+        ids.forEach(id => {
+            state.activeStories.find(story => story.id === id).viewers.push(Vue.auth.user());
+        });
+
     }
 }
 

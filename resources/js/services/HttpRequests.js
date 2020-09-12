@@ -1,19 +1,12 @@
-import axios from "axios";
 import Vue from 'vue'
 
-const apiClient = axios.create({
-    baseURL: `http://social.test/api`,
-    withCredentials: false, // This is the default
-    headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: Vue.$auth.token()
-    },
-});
 
 export default {
-    uploadPost(data) {
-        return apiClient.post("/posts", data);
+    changePassword(data) {
+        return Vue.axios.post("/users/" + Vue.auth.user().username, data);
+    },
+    changeProfileInfo(data) {
+        return Vue.axios.post("/users/"+ Vue.auth.user().username, data);
     },
     uploadFilee(fileObject) {
         return apiClient.post("/messenger/" +

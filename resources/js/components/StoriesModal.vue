@@ -5,7 +5,7 @@
         content-class="stories-dialog"
         max-width="56vh"
     >
-        <v-card height="98%"
+        <v-card height="100%"
                 width="56vh"
                 style="border: 1px solid black;"
                 class="mx-auto story"
@@ -31,9 +31,9 @@
             <div class="slide" @click="slideClicked" @mousedown="mouseDown">
 
             </div>
-            <v-btn x-large icon v-if="currentSlide.type === 'video'" class="text-none"
+            <v-btn x-large icon v-if="currentSlide.type === 'video'" class="text-none stroke"
                    @click="$refs.videoStory.muted = !$refs.videoStory.muted">
-                <v-icon>mdi-volume-high</v-icon>
+                <v-icon color="white" class="stroke">mdi-volume-high</v-icon>
             </v-btn>
         </v-card>
     </v-dialog>
@@ -43,6 +43,7 @@
     import anime from "animejs";
 
     const IMAGE_DURATION = 3000;
+
     export default {
         props: {
             slides: Array,
@@ -57,10 +58,10 @@
             }),
             currentSlideIndex: 0,
             pressDetect: false,
-            pressFunc: null
+            pressFunc: null,
+            watchedStories: [],
         }),
         mounted() {
-            console.log(this)
             let $timeline = document.getElementsByClassName('timeline')[0];
 
             // Add progress bars to the timeline animation group
@@ -68,14 +69,15 @@
                 this.timeline.add({
                     targets: $timeline.getElementsByClassName('slice')[index].getElementsByClassName('progress'),
                     width: '100%',
-                    duration: slide.type === 'video' ? slide.duration : IMAGE_DURATION,
+                    duration: slide.type === 'video' ? slide.duration * 1000 : IMAGE_DURATION,
                     changeBegin: () => {
                         this.currentSlideIndex = index;
+                        this.watchedStories.push(slide.id);
                     },
                     complete: () => {
                         if (index === this.slides.length - 1) {
                             // this.nextStory();
-                            console.log('next Story');
+                            this.closeModal();
                         }
                     }
                 });
@@ -112,16 +114,16 @@
                 }
                 e.offsetX > e.target.clientWidth / 2 ? this.nextSlide() : this.prevSlide();
             },
-            nextSlide: function () {
+            nextSlide() {
                 if (this.currentSlideIndex < this.slides.length - 1) {
                     this.currentSlideIndex++;
                     this.resetSlide();
                 } else {
                     console.log('close stories');
-                    this.$emit('closeModal');
+                    this.closeModal();
                 }
             },
-            prevSlide: function () {
+            prevSlide() {
                 if (this.currentSlideIndex > 0) {
                     this.currentSlideIndex = this.currentSlideIndex - 1;
                     this.resetSlide();
@@ -130,16 +132,19 @@
                     console.log('prev story');
                 }
             },
-            resetSlide: function () { // Jump to beginning of the slide
+            resetSlide() { // Jump to beginning of the slide
                 this.timeline.pause();
                 let seek = 0;
-                console.log(this.currentSlideIndex);
                 for (let i = 0; i < this.currentSlideIndex; i++)
                     seek += this.timeline.children[i].duration;
                 this.timeline.seek(seek + 1);
                 this.timeline.play();
             },
-
+            closeModal() {
+                this.timeline.pause();
+                this.$store.dispatch("profile/markStoryViewed", this.watchedStories);
+                this.$emit('closeModal');
+            }
         },
         computed: {
             currentSlide() {
@@ -151,17 +156,16 @@
                     return this.showModal;
                 },
                 set() {
-                    this.currentSlideIndex = 0;
-                    this.$emit('closeModal');
+                    this.closeModal();
                 }
             }
-        }
+        },
     }
 </script>
 
 <style>
     .stories-dialog {
-        height: 100vh;
+        height: 98vh;
         overflow-x: hidden;
         /*overflow-y: hidden;*/
     }
@@ -185,6 +189,7 @@
     .story {
         display: flex;
         flex-direction: column;
+        background-color: black;
     }
 
     .timeline {
@@ -195,7 +200,7 @@
     .timeline > .slice {
         background: rgba(0, 0, 0, 0.3);
         height: 6px;
-        margin: 8px;
+        margin: 8px 4px;
         width: 100%;
     }
 
