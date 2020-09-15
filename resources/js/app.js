@@ -27,30 +27,6 @@ window.Vue = require('vue');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-/*import VueRouter from 'vue-router'
-import 'es6-promise/auto';
-import axios from 'axios';
-import VueAuth from '@websanova/vue-auth';
-import VueAxios from 'vue-axios';
-import auth from './auth';
-import router from "./router";
-import vuetify from "./plugins/vuetify";
-import store from "./store";
-
-Vue.router = router
-Vue.use(VueRouter)
-Vue.use(VueAxios, axios);
-axios.defaults.baseURL = 'http://social.test/api';
-Vue.use(VueAuth, auth);
-Vue.component('index', require('./Index').default);
-
-const app = new Vue({
-    el: '#app',
-    router,
-    store,
-    vuetify
-});*/
-
 import Vue from 'vue'
 import App from './App.vue'
 import vuetify from './plugins/vuetify';
@@ -61,31 +37,13 @@ import 'es6-promise/auto';
 import VueAuth from '@websanova/vue-auth';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
-import auth from './auth';
+import auth from './plugins/auth';
 import toastification from './plugins/vue-toastification';
+import extra from './plugins/extra';
 
 Vue.router = router;
 Vue.use(VueAxios, axios);
 axios.defaults.baseURL = 'http://social.test/api';
-
-// axios.interceptors.response.use(null, error => {
-//     let path = '/error';
-//     switch (error.response.status) {
-//         case 401: path = '/login'; break;
-//         case 404: path = '/404'; break;
-//     }
-//     router.push(path);
-//     return Promise.reject(error);
-// });
-
-Vue.prototype.$swap = function(arr, a, b) {
-    let temp1 = arr[a];
-    let temp2 = arr[b];
-
-    Vue.set(arr,a,temp2);
-    Vue.set(arr,b,temp1);
-}
-
 Vue.use(VueAuth, auth);
 
 Vue.config.productionTip = false

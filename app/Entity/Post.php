@@ -42,6 +42,16 @@ class Post extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    public function likes()
+    {
+        return $this->belongsToMany(User::class, 'likes_posts');
+    }
+
     public function getImagePathAttribute()
     {
         return '/storage/posts/' . $this->image;

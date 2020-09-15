@@ -14,9 +14,9 @@ class AuthController extends Controller
     {
 
         User::create(['email' => $request->email,
-                      'username' => $request->username,
-                      'password' => bcrypt($request->password),
-                      'lastActivity' => Carbon::now()]);
+            'username' => $request->username,
+            'password' => bcrypt($request->password),
+            'lastActivity' => Carbon::now()]);
         return response()->json(['status' => 'success'], 200);
     }
 
@@ -58,22 +58,9 @@ class AuthController extends Controller
         return response()->json(['error' => 'refresh_token_error'], 401);
     }
 
-//    public function refresh()
-//    {
-//        return $this->respondWithToken(auth()->refresh());
-//    }
-
     private function guard()
     {
         return Auth::guard();
     }
 
-//    protected function respondWithToken($token)
-//    {
-//        return response()->json([
-//            'access_token' => $token,
-//            'token_type' => 'bearer',
-//            'expires_in' => auth()->factory()->getTTL() * 60
-//        ]);
-//    }
 }

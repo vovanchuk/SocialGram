@@ -18,33 +18,33 @@
                 <v-list-item-icon>
                     <v-icon>mdi-pound</v-icon>
                 </v-list-item-icon>
-                <v-list-item-title>Trending</v-list-item-title>
+                <v-list-item-title>Profile</v-list-item-title>
             </v-list-item>
-            <v-list-item to="/">
+            <v-list-item to="/" disabled>
                 <v-list-item-icon>
                     <v-icon>mdi-check-decagram</v-icon>
                 </v-list-item-icon>
-                <v-list-item-title>Top Post (/)</v-list-item-title>
+                <v-list-item-title>Top Post</v-list-item-title>
             </v-list-item>
-            <v-list-item to="/welcome">
+            <v-list-item disabled>
                 <v-list-item-icon>
                     <v-icon>mdi-account-outline</v-icon>
                 </v-list-item-icon>
                 <v-list-item-title>People (welcome)</v-list-item-title>
             </v-list-item>
-            <v-list-item>
+            <v-list-item disabled>
                 <v-list-item-icon>
                     <v-icon>mdi-bell-outline</v-icon>
                 </v-list-item-icon>
                 <v-list-item-title>Notification</v-list-item-title>
             </v-list-item>
-            <v-list-item>
+            <v-list-item disabled>
                 <v-list-item-icon>
                     <v-icon>mdi-send-outline</v-icon>
                 </v-list-item-icon>
                 <v-list-item-title>Direct</v-list-item-title>
             </v-list-item>
-            <v-list-item>
+            <v-list-item disabled>
                 <v-list-item-icon>
                     <v-icon>mdi-chart-pie</v-icon>
                 </v-list-item-icon>

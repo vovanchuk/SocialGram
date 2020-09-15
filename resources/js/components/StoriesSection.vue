@@ -58,19 +58,6 @@
                 if (currentIndex === -1) return [];
                 this.$swap(stories, 0, currentIndex);
                 return stories;
-                // if(this.clickedStory.isViewed) {
-                //     let viewed = [...this.activeViewed];
-                //     let currentIndex = viewed.findIndex(story => story.id === this.clickedStory.id);
-                //     if (currentIndex === -1) return;
-                //     this.swap(viewed, 0, currentIndex);
-                //     return viewed;
-                // } else {
-                //     let unviewed = [...this.activeUnviewed];
-                //     let currentIndex = unviewed.findIndex(story => story.id === this.clickedStory.id);
-                //     if (currentIndex === -1) return;
-                //     this.swap(unviewed, 0, currentIndex);
-                //     return unviewed;
-                // }
             }
         },
         methods: {
@@ -81,7 +68,6 @@
                 this.$store.dispatch("profile/uploadStory", formData);
             },
             toggleStoriesModal(story) {
-                console.log(story)
                 this.clickedStory = story;
                 this.showModal = true;
             }

@@ -16,18 +16,18 @@ class ProfileResource extends JsonResource
     {
         return [
             'profile' => [
-                'id' => $this->id,
-                'username' => $this->username,
-                'title' => $this->title,
-                'description' => $this->description,
-                'url' => $this->url,
-                'avatar' => $this->avatar,
+                'id'            => $this->id,
+                'username'      => $this->username,
+                'title'         => $this->title,
+                'description'   => $this->description,
+                'url'           => $this->url,
+                'avatar'        => $this->avatar,
                 'last_activity' => $this->lastActivity,
             ],
-            'posts' => $this->posts,
-            'followers' => UserResource::collection($this->followers),
-            'followings' => UserResource::collection($this->followings),
-            'active_stories' => StoryResource::collection($this->whenLoaded('activeStories')),
+            'posts'             => PostResource::collection($this->posts),
+            'followers'         => UserResource::collection($this->followers),
+            'followings'        => UserResource::collection($this->followings),
+            'active_stories'    => StoryResource::collection($this->whenLoaded('activeStories')),
             'favorited_stories' => StoryResource::collection($this->whenLoaded('favoritedStories')),
         ];
     }

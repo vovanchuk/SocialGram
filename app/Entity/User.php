@@ -86,6 +86,16 @@ class User extends Authenticatable implements JWTSubject
 
     protected $appends = ['avatar'];
 
+    public function liked()
+    {
+        return $this->belongsToMany(Post::class, 'likes_posts');
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
     public function stories()
     {
         return $this->hasMany(Story::class)->orderBy('created_at', 'desc');

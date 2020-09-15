@@ -57,10 +57,10 @@ class UserController extends Controller
                 return response()->json(['status' => 'success', 'message' => 'Password changed'], 200);
             } else return response()->json(['status' => 'error', 'message' => 'Old password incorrent'], 400);
         } else {
-            $validated = $request->validate(['username'    => 'string|alpha_dash|max:16|min:4|unique:users,username,' . $user->id,
-                                             'title'       => 'string|alpha_spaces|min:4|max:32',
-                                             'url'         => 'url',
-                                             'description' => 'string|max:255']);
+            $validated = $request->validate(['username'    => 'nullable|string|alpha_dash|max:16|min:4|unique:users,username,' . $user->id,
+                                             'title'       => 'nullable|string|alpha_spaces|min:4|max:32',
+                                             'url'         => 'nullable|url',
+                                             'description' => 'nullable|string|max:255']);
             $user->update($validated);
 
             return response()->json([

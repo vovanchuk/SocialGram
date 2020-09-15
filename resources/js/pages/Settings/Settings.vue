@@ -16,7 +16,7 @@
                             </v-list-item-icon>
                             <v-list-item-title>Change Password</v-list-item-title>
                         </v-list-item>
-                        <v-list-item>
+                        <v-list-item disabled>
                             <v-list-item-icon>
                                 <v-icon>mdi-pound</v-icon>
                             </v-list-item-icon>

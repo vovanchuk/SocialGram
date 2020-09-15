@@ -39,6 +39,12 @@ Route::group(['prefix' => 'profiles'], function(){
 
 Route::group(['prefix' => 'posts'], function(){
     Route::post('/', 'PostController@store')->middleware('auth:api');
+    Route::post('{post_id}/like', 'PostController@like')->middleware('auth:api');
+    Route::delete('{post_id}/like', 'PostController@unlike')->middleware('auth:api');
+});
+
+Route::group(['prefix' => 'comments'], function() {
+    Route::post('/', 'CommentController@store')->middleware('auth:api');
 });
 
 Route::group(['prefix' => 'stories'], function(){
@@ -46,4 +52,8 @@ Route::group(['prefix' => 'stories'], function(){
         Route::post('/', 'StoryController@store');
         Route::post('/markViewed', 'StoryController@markViewed');
     });
+});
+
+Route::group(['prefix' => 'feed'], function() {
+    Route::get('/', 'PostController@feed');
 });

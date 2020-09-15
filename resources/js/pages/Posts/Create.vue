@@ -42,6 +42,7 @@
 </template>
 
 <script>
+    import HttpRequests from "../../services/HttpRequests";
     export default {
         data: () => ({
                 currentFile: undefined,
@@ -49,8 +50,8 @@
             }
         ),
         methods: {
-            fileAdded(e){
-                this.currentFile = e
+            fileAdded(file){
+                this.currentFile = file;
             },
             upload() {
                 if (!this.currentFile) {
@@ -61,8 +62,13 @@
                 formData.append("image", this.currentFile);
                 formData.append("description", this.description);
 
-                this.axios.post('/posts', formData).then(() => {
-                    this.$router.push({name: 'feed'})
+                HttpRequests.uploadPost(formData).then(res => {
+                    this.$toast.success('Success');
+                    this.$store.commit('profile/ADD_POST', res.data.post);
+                    this.$router.push({name: 'feed'});
+                }).catch(error => {
+                    this.$toast.err('Some error');
+                    console.log(error)
                 })
             },
         }

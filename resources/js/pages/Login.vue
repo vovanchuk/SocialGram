@@ -189,7 +189,7 @@
                                             />
                                             <div class="text-center mt-6">
                                                 <v-btn large :color="bgColor" dark
-                                                >Reset Password
+                                                >Reset Password (inactive)
                                                 </v-btn
                                                 >
                                             </div>
@@ -238,14 +238,12 @@
                     })
                     .then(
                         () => {
+                            this.$toast.success('Success!')
                             app.success = true;
                             this.step = 1;
-                            // this.$router.push({
-                            //     name: "login",
-                            //     params: { successRegistrationRedirect: true },
-                            // });
                         },
                         (res) => {
+                            this.$toast.error('Error!');
                             console.log(res.response.data.errors);
                             // app.has_error = true;
                             // app.error = res.response.data.error;
@@ -268,7 +266,8 @@
                     // let redirectTo = redirect ? redirect.from.name : this.$auth.user().role === 2 ? 'settings.profile' : 'feed'
                     // this.$router.push({name: redirectTo})
                 }, () => {
-                    app.has_error = true
+                    this.$toast.error('Error!');
+                    app.has_error = true;
                 });
             },
             resetFields() {

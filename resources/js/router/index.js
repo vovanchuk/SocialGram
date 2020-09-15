@@ -3,13 +3,7 @@ import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
 
-// import Home from '../pages/Home'
-// import Register from '../pages/Register'
 import Login from '../pages/Login'
-// import Dashboard from '../pages/user/Dashboard'
-// import AdminDashboard from '../pages/admin/Dashboard'
-
-import Welcome from '../pages/Welcome'
 import Explore from '../pages/Explore'
 import Feed from '../pages/Feed'
 import Profile from '../pages/Profile'
@@ -18,9 +12,11 @@ import SettingsProfile from '../pages/Settings/Profile'
 import SettingsPassword from '../pages/Settings/Password'
 import PostsCreate from '../pages/Posts/Create'
 import NotFound from '../pages/404'
-import Stories from "../pages/Stories";
 
-// Routes
+// NON-LOGGED ROUTES (auth: false)
+// PUBLIC ROUTES (auth: undefined)
+// ADMIN ROUTES (auth: {roles: 2, redirect: {name: 'login'}, forbiddenRedirect: '/405'})
+// USER ROUTES (auth: true)
 const routes = [
     {
         path: '/',
@@ -30,7 +26,6 @@ const routes = [
             auth: true,
         }
     },
-    // PUBLIC ROUTES (auth: undefined)
     {
         path: '/profile',
         component: Profile,
@@ -45,19 +40,10 @@ const routes = [
         component: Profile,
         name: 'userProfile',
         meta: {
-            layout: 'profile'
+            layout: 'profile',
+            auth: true
         }
     },
-    {
-        path: '/stories',
-        component: Stories,
-        name: 'stories',
-        meta: {
-            layout: 'empty'
-        }
-    },
-    // ADMIN ROUTES (auth: {roles: 2, redirect: {name: 'login'}, forbiddenRedirect: '/405'})
-    // USER ROUTES (auth: true)
     {
         path: '/explore',
         name: 'explore',
@@ -103,7 +89,6 @@ const routes = [
             auth: true
         },
     },
-    // NON-LOGGED ROUTES (auth: false)
     {
         path: '/login',
         name: 'login',
@@ -114,7 +99,7 @@ const routes = [
         }
     },
     {
-        // catch all 404 - define at the very end
+        // catch all 404, define at end!
         path: '*',
         name: 'notFound',
         component: NotFound,

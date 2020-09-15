@@ -62,7 +62,6 @@
                     data.append('newPassword', this.newPassword);
                     data.append('newPassword_confirmation', this.newPassword_confirmation);
                     HttpRequests.changePassword(data).then((res) => {
-                        console.log(res)
                         if(res.data.status === 'success') this.$toast.success('Password changed!');
                         this.oldPassword = '';
                         this.newPassword = '';

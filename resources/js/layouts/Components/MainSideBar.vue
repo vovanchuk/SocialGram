@@ -10,7 +10,7 @@
         <!--      logo-->
         <v-row>
             <div class="d-flex mt-2 mx-auto">
-                <span style="border-right: 1px solid black;" class="pr-3"><strong>BuhoGram</strong></span>
+                <span style="border-right: 1px solid black;" class="pr-3"><strong>SocialGram</strong></span>
                 <img :src="require('@/assets/icon.svg')" class="w-100 ml-2"
                      style="max-height: 20px; max-width: 25px">
             </div>

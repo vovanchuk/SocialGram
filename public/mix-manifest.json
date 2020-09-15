@@ -9,5 +9,7 @@
     "/layout-layouts-Components-UserHeader-vue.js": "/layout-layouts-Components-UserHeader-vue.js",
     "/layout-layouts-default-vue.js": "/layout-layouts-default-vue.js",
     "/layout-layouts-empty-vue.js": "/layout-layouts-empty-vue.js",
-    "/layout-layouts-profile-vue.js": "/layout-layouts-profile-vue.js"
+    "/layout-layouts-profile-vue.js": "/layout-layouts-profile-vue.js",
+    "/layout-pages-Welcome-vue.js": "/layout-pages-Welcome-vue.js",
+    "/layout-pages-Stories-vue.js": "/layout-pages-Stories-vue.js"
 }

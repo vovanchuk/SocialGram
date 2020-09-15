@@ -30,12 +30,43 @@
                 ></v-img>
             </v-col>
         </v-row>
+        <v-row>
+            <v-col cols="12" class="pt-0 pb-0 px-4">
+                <div>
+                    <v-btn x-large icon @click="likeClicked">
+                        <v-icon :color="isLiked? 'red' : ''">
+                            {{ isLiked ? 'mdi-heart' : 'mdi-heart-outline' }}
+                        </v-icon>
+                    </v-btn>
+                </div>
+                <div class="ml-2" style="max-height: 150px; overflow-y: scroll">
+                    <PostComments :comments="post.comments"/>
+                </div>
+                <div class="pt-0 pl-0 pb-0 mt-auto">
+                    <CommentComposer :post="post"/>
+                </div>
+            </v-col>
+        </v-row>
     </v-card>
 </template>
 
 <script>
+    import PostComments from "./PostComments";
+    import CommentComposer from "./CommentComposer";
+    // TODO: ADD DESCRIPTION TO POST
     export default {
-        props: ['profile', 'post']
+        props: ['profile', 'post'],
+        components: {PostComments, CommentComposer},
+        methods: {
+            likeClicked() {
+                this.isLiked ? this.$store.dispatch('profile/unlikePost', this.post.id) : this.$store.dispatch('profile/likePost', this.post.id);
+            }
+        },
+        computed: {
+            isLiked() {
+                return this.post.likes.findIndex(user => user.id === this.$auth.user().id) !== -1;
+            }
+        }
     }
 </script>
 

@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import HttpRequests from "../../services/HttpRequests";
 
 const state = {
     profile: {},
@@ -55,7 +56,7 @@ const actions = {
     fetchProfile({state, commit}, username) {
         if (username === state.profile.username) return;
         state.error = null;
-        Vue.axios.get('profiles/' + username).then((res) => {
+        HttpRequests.fetchProfile(username).then(res => {
             commit("SET_POSTS", res.data.data.posts);
             commit("SET_FOLLOWERS", res.data.data.followers);
             commit("SET_FOLLOWING", res.data.data.followings);
@@ -69,23 +70,23 @@ const actions = {
     follow({commit}, username) {
         if(username === Vue.auth.user().username || username === undefined) return;
 
-        Vue.axios.post(`profiles/${username}/follow`).then((res) => {
+        HttpRequests.followProfile(username).then(res => {
             commit("ADD_TO_FOLLOWERS", Vue.auth.user());
-        }).catch((err) => {
+        }).catch(err => {
             console.log(err);
         })
     },
     unfollow({commit}, username) {
         if(username === Vue.auth.user().username || username === undefined) return;
 
-        Vue.axios.delete(`profiles/${username}/follow`).then((res) => {
+        HttpRequests.unfollowProfile(username).then(res => {
             commit("REMOVE_FROM_FOLLOWERS", Vue.auth.user());
         }).catch((err) => {
             console.log(err);
         })
     },
     uploadStory({commit}, data) {
-        Vue.axios.post('stories', data).then((res) => {
+        HttpRequests.uploadStory(data).then((res) => {
             commit("ADD_TO_ACTIVE_STORIES", res.data.data);
         }).catch((err) => {
             console.log(err);
@@ -95,12 +96,26 @@ const actions = {
         if(!Vue.auth.check()) return;
 
         let unique = [...new Set(array_ids)];
-        Vue.axios.post('stories/markViewed', {ids: unique}).then((res) => {
+        HttpRequests.markStoryViewed({ids: unique}).then((res) => {
             commit("MARK_VIEWED", unique);
         }).catch((err) => {
             console.log(err)
         })
-    }
+    },
+    likePost({commit}, post_id) {
+        HttpRequests.likePost(post_id).then(res => {
+            commit("ADD_LIKE", post_id);
+        }).catch(error => {
+            console.log(error)
+        });
+    },
+    unlikePost({commit}, post_id) {
+        HttpRequests.unlikePost(post_id).then(res => {
+            commit("REMOVE_LIKE", post_id);
+        }).catch(error => {
+            console.log(error)
+        });
+    },
 }
 
 const mutations = {
@@ -142,7 +157,19 @@ const mutations = {
         ids.forEach(id => {
             state.activeStories.find(story => story.id === id).viewers.push(Vue.auth.user());
         });
-
+    },
+    APPEND_NEW_COMMENT(state, comment) {
+        state.posts.find(post => post.id === comment.post_id).comments.push(comment);
+    },
+    ADD_LIKE(state, post_id) {
+        state.posts.find(post => post.id === post_id).likes.push(Vue.auth.user());
+    },
+    REMOVE_LIKE(state, post_id) {
+        let likes = state.posts.find(post => post.id === post_id).likes;
+        likes.splice(likes.findIndex(user => user.id === Vue.auth.user().id), 1);
+    },
+    ADD_POST(state, post) {
+        state.posts.unshift(post);
     }
 }
 

@@ -20,9 +20,6 @@
             AppBar,
             RightBar
         },
-        data: () => ({
-            // drawer: null
-        }),
     }
 </script>
 

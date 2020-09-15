@@ -14,14 +14,13 @@
             <video ref="videoStory" v-if="currentSlide.type === 'video'" :src="currentSlide.url" autoplay playsinline
                    muted @click="slideClicked"
                    @mousedown="mouseDown"></video>
-            <!--                <v-img v-if="currentSlide.type === 'image'" :src="currentSlide.url" @click="slideClicked" @mousedown="mouseDown" class="story-image"></v-img>-->
             <div class="timeline">
                 <div class="slice" v-for="(slide, i) in slides" :key="i">
                     <div class="progress">&nbsp;</div>
                 </div>
             </div>
             <div class="user-info ml-4 mt-1">
-                <div @click="$router.push(`/profile/${profile.username}`)" class="white--text">
+                <div @click="$router.push(`/profile/${profile.username}`).catch(()=>{});" class="white--text">
                     <v-avatar rounded="50" size="40">
                         <v-img :src="profile.avatar"/>
                     </v-avatar>
@@ -94,15 +93,15 @@
                     }, 150)
                 }
             },
-            preloadNext() {
-                if (this.currentSlideIndex === this.slides.length - 1) return;
-                let img = new Image();
-
-                img.onload = () => {
-                    console.log('img preloaded');
-                }
-                img.src = this.slides[this.currentSlideIndex + 1].url;
-            },
+            // preloadNext() { // TODO: Fix preload
+            //     if (this.currentSlideIndex === this.slides.length - 1) return;
+            //     let img = new Image();
+            //
+            //     img.onload = () => {
+            //         console.log('img preloaded');
+            //     }
+            //     img.src = this.slides[this.currentSlideIndex + 1].url;
+            // },
             slideClicked(e) {
                 clearTimeout(this.pressFunc);
                 this.pressFunc = null;
@@ -119,7 +118,6 @@
                     this.currentSlideIndex++;
                     this.resetSlide();
                 } else {
-                    console.log('close stories');
                     this.closeModal();
                 }
             },

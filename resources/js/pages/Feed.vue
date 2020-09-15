@@ -12,7 +12,6 @@
     import FeedSection from "../components/FeedSection";
 
     export default {
-        name: "Feed",
         components: {
             FeedSection
         },

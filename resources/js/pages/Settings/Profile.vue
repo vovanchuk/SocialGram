@@ -124,8 +124,10 @@
                 let formData = new FormData();
                 formData.append('image', e.target.files[0]);
 
-                this.axios.post('/users/' + this.$auth.user().username, formData).then((res) => {
-                    this.$auth.user({avatar: res.data.avatar})
+                HttpRequests.changeAvatar(formData).then((res) => {
+                    this.$toast.success('Avatar changed!');
+                    // this.$auth.user({avatar: res.data.avatar})
+                    this.$auth.fetch();
                 })
             }
         }

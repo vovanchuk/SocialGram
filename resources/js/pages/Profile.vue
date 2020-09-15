@@ -14,22 +14,9 @@
     import FeedSection from "../components/FeedSection";
 
     export default {
-        mounted() {
-            // if (!this.$route.params.username) this.$route.params.username = this.$auth.user().username;
-            // if (!this.$route.params.username){
-            //     this.$router.push({name: 'userProfile', params: {
-            //         username: this.$auth.user().username
-            //         }})
-            // }
-            // if(!this.$route.params.username) return;
-            // console.log('Dispatch: ' + this.$route.params.username);
-            // this.$store.dispatch("profile/fetchProfile", this.$route.params.username);
-        },
         beforeRouteEnter (to, from, next) {
-            // TODO: FIX DOUBLE REQUEST
             next(vm => {
                 if(to.path === '/profile') {
-                    vm.$store.dispatch("profile/fetchProfile", vm.$auth.user().username);
                     next( { path: '/profile/'+ vm.$auth.user().username } );
                 }
                 else {

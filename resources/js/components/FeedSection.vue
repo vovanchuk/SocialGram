@@ -24,7 +24,7 @@
             </div>
 
         </div>
-        <PostModal :profile="profileInfo" :post="this.currentModalPost" :showModal="showModal" @closeModal="showModal = false"/>
+        <PostModal v-if="showModal" :profile="profileInfo" :post="this.currentModalPost" :showModal="showModal" @closeModal="showModal = false"/>
     </div>
 </template>
 
