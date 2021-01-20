@@ -43,7 +43,7 @@ import extra from './plugins/extra';
 
 Vue.router = router;
 Vue.use(VueAxios, axios);
-axios.defaults.baseURL = 'http://social.test/api';
+axios.defaults.baseURL = 'http://localhost:8000/api';
 Vue.use(VueAuth, auth);
 
 Vue.config.productionTip = false

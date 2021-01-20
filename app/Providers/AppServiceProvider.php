@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Cache\NullStore;
+use Illuminate\Support\Facades\Cache;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -31,6 +33,11 @@ class AppServiceProvider extends ServiceProvider
             return preg_match('/^[\pL\s]+$/u', $value);
 
         });
-
+        if (!$this->app->isLocal()) {
+            $this->app['request']->server->set('HTTPS', true);
+        }
+        Cache::extend('none', function ($app) {
+            return Cache::repository(new NullStore);
+        });
     }
 }

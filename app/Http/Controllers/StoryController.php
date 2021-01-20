@@ -47,8 +47,9 @@ class StoryController extends Controller
         $saveFolder = public_path("storage\\stories\\");
         $fullPath = public_path("storage\\temp\\") . $fileName;
 
-        $pathForMime = implode('\\',array_diff(array_slice(explode('\\', $fullPath), -4, 4), ['storage'])); // Fucking Storage specificity (exclude '/storage/')
-        $mimetype = Storage::mimeType($pathForMime);
+        $pathForMime = implode('\\',array_diff(array_slice(explode('\\', $fullPath), -4, 4), ['storage'])); // f**** Storage specificity (exclude '/storage/')
+//        $mimetype = Storage::mimeType('/' . $pathForMime);
+        $mimetype = Storage::mimeType('public\\temp\\' . $fileName);
         $type = strpos($mimetype, 'image') !== false ? 'image' : (strpos($mimetype, 'video') !== false ? 'video' : null);
         if ($type === 'image') {
             $newImage = $this->addBackground($fullPath, $mimetype);
