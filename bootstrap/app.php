@@ -26,6 +26,9 @@ $app = new Illuminate\Foundation\Application(
 |
 */
 
+header('Access-Control-Allow-Headers: Authorization');
+header('Access-Control-Expose-Headers: Authorization');
+
 $app->singleton(
     Illuminate\Contracts\Http\Kernel::class,
     App\Http\Kernel::class

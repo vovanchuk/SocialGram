@@ -262,6 +262,7 @@
                     staySignedIn: true,
                     fetchUser: true
                 }).then((res) => {
+                    console.log(res)
                     // handle redirection
                     // let redirectTo = redirect ? redirect.from.name : this.$auth.user().role === 2 ? 'settings.profile' : 'feed'
                     // this.$router.push({name: redirectTo})
